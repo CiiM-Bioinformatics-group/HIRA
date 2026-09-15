@@ -1,0 +1,53 @@
+# mac os x
+.DS_Store
+.R*
+# related to files
+.pybiomart.sqlite
+downloads/
+input/
+logs/
+params*
+resources*
+target/
+out/
+local/
+datasets_raw/
+results_folder/
+state*
+manuscript/
+plan*
+trace*
+tw*
+datasets/*
+prior/*
+sync.sh
+tmp/*   
+
+# related to python
+.ipynb_checkpoints
+__pycache__/
+
+# ?
+.$*
+bin*
+bin/
+
+# related to nextflow
+work
+.nextflow*
+
+# IDE related
+.idea
+.vscode
+
+# scratch/experimental notebooks, not part of the published pipeline
+notebooks/experimental/
+results_folder_*/
+
+.env
+CLAUDE.md
+singularity/*.sif
+
+# scratch
+temp/
+$LOG
