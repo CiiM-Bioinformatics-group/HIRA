@@ -1,0 +1,40 @@
+set -e
+
+source scripts/_env.sh
+
+mkdir -p $(python -c "import sys; sys.path.insert(0, 'src'); from config import PLOTS_DIR, CLOCKS_DIR; print(PLOTS_DIR, CLOCKS_DIR)")
+
+python src/feature_association/consensus_nets.py
+
+echo "--------------------------------------------------------------train clocks--------------------------------------------------------------"
+python src/clock/run_train.py
+
+echo "--------------------------------------------------------------bundle package data--------------------------------------------------------------"
+bash scripts/build_package_data.sh
+
+echo "--------------------------------------------------------------clocks: exp analysis--------------------------------------------------------------"
+python src/clock/run_exp_analysis.py
+
+
+echo "--------------------------------------------------------------cv--------------------------------------------------------------"
+python src/clock/run_cv.py
+
+echo "--------------------------------------------------------------comparision: sle --------------------------------------------------------------"
+python src/clock/clock_analysis.py --dataset perez_sle --analysis-type disease --cell-types CD4T CD8T
+
+
+echo "--------------------------------------------------------------comparision: parsebioscience --------------------------------------------------------------"
+python src/clock/clock_analysis.py --dataset parsebioscience --analysis-type perturbation --cell-types CD4T CD8T
+
+echo "--------------------------------------------------------------comparision: op --------------------------------------------------------------"
+python src/clock/clock_analysis.py --dataset op --analysis-type perturbation --cell-types CD4T CD8T 
+
+echo "--------------------------------------------------------------comparision: CLCX9 --------------------------------------------------------------"
+python src/clock/clock_analysis.py --dataset CXCL9 --analysis-type perturbation --cell-types CD4T CD8T
+
+# last: the published scImmuAging clocks are slow and nothing else depends on them
+echo "--------------------------------------------------------------external clock benchmark --------------------------------------------------------------"
+bash scripts/clock_benchmark/script.sh
+
+echo "--------------------------------------------------------------comparision to previous models --------------------------------------------------------------"
+python src/clock/run_comparision.py
